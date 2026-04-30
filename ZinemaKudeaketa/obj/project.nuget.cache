@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "c/rcRa4Q5HE=",
+  "success": true,
+  "projectFilePath": "F:\\DESARROLLO GOIERRI\\recu datu atzipen\\ZinemaKudeaketa\\ZinemaKudeaketa\\ZinemaKudeaketa.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Aitor\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\Aitor\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\Aitor\\.nuget\\packages\\mysqlconnector\\2.5.0\\mysqlconnector.2.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
