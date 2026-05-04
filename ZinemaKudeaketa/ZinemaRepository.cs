@@ -4,21 +4,21 @@ namespace ZinemaKudeaketa;
 
 public sealed class ZinemaRepository
 {
-    private readonly string dataFolder;
-    private readonly string connectionFile;
     private readonly string logFile;
     private readonly string connectionString;
 
     public ZinemaRepository()
     {
-        dataFolder = Path.Combine(AppContext.BaseDirectory, "datuak");
-        Directory.CreateDirectory(dataFolder);
-
-        connectionFile = Path.Combine(dataFolder, "mysql_connection.txt");
         logFile = Path.Combine(FindProjectRoot(AppContext.BaseDirectory) ?? AppContext.BaseDirectory, "mugimenduak.txt");
-        connectionString = LoadConnectionString();
-
-        EnsureDatabaseAndTables();
+        connectionString = new MySqlConnectionStringBuilder
+        {
+            Server = "localhost",
+            Port = 3306,
+            Database = "zinema_kudeaketa",
+            UserID = "root",
+            Password = "1MG2024",
+            AllowUserVariables = true
+        }.ConnectionString;
     }
 
     public IReadOnlyList<Pelikula> GetActiveMovies() => GetMovies("WHERE p.ezabatuta = 0");
@@ -200,91 +200,11 @@ public sealed class ZinemaRepository
         };
     }
 
-    private void EnsureDatabaseAndTables()
-    {
-        var builder = new MySqlConnectionStringBuilder(connectionString);
-        var database = string.IsNullOrWhiteSpace(builder.Database) ? "zinema_kudeaketa" : builder.Database;
-        builder.Database = "";
-
-        using (var connection = new MySqlConnection(builder.ConnectionString))
-        {
-            connection.Open();
-            using var createDb = connection.CreateCommand();
-            createDb.CommandText = $"CREATE DATABASE IF NOT EXISTS `{EscapeIdentifier(database)}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
-            createDb.ExecuteNonQuery();
-        }
-
-        using var dbConnection = OpenConnection();
-        Execute(dbConnection, """
-            CREATE TABLE IF NOT EXISTS pelikulak (
-                id INT NOT NULL AUTO_INCREMENT,
-                izena VARCHAR(150) NOT NULL,
-                eserleku_kopurua INT NOT NULL,
-                ezabatuta TINYINT(1) NOT NULL DEFAULT 0,
-                sortze_data DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                aldaketa_data DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (id),
-                CONSTRAINT chk_pelikulak_eserlekuak CHECK (eserleku_kopurua > 0),
-                CONSTRAINT chk_pelikulak_ezabatuta CHECK (ezabatuta IN (0, 1))
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-            """);
-        Execute(dbConnection, """
-            CREATE TABLE IF NOT EXISTS erreserbak (
-                id INT NOT NULL AUTO_INCREMENT,
-                pelikula_id INT NOT NULL,
-                izena VARCHAR(150) NOT NULL,
-                eserleku_kopurua INT NOT NULL,
-                sortze_data DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (id),
-                INDEX idx_erreserbak_pelikula_id (pelikula_id),
-                CONSTRAINT chk_erreserbak_eserlekuak CHECK (eserleku_kopurua BETWEEN 1 AND 5),
-                CONSTRAINT fk_erreserbak_pelikulak
-                    FOREIGN KEY (pelikula_id) REFERENCES pelikulak(id)
-                    ON DELETE CASCADE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-            """);
-
-        using var count = dbConnection.CreateCommand();
-        count.CommandText = "SELECT COUNT(*) FROM pelikulak;";
-        if (Convert.ToInt32(count.ExecuteScalar()) > 0)
-        {
-            return;
-        }
-
-        Execute(dbConnection, """
-            INSERT INTO pelikulak (izena, eserleku_kopurua) VALUES
-            ('Dune: Part Two', 120),
-            ('Inside Out 2', 90),
-            ('Oppenheimer', 100),
-            ('Robot Dreams', 70);
-            """);
-        WriteLog("HASIERAKO DATUAK SORTU | 4 pelikula gehitu dira");
-    }
-
-    private static void Execute(MySqlConnection connection, string sql)
-    {
-        using var command = connection.CreateCommand();
-        command.CommandText = sql;
-        command.ExecuteNonQuery();
-    }
-
     private MySqlConnection OpenConnection()
     {
         var connection = new MySqlConnection(connectionString);
         connection.Open();
         return connection;
-    }
-
-    private string LoadConnectionString()
-    {
-        if (!File.Exists(connectionFile))
-        {
-            File.WriteAllText(
-                connectionFile,
-                "Server=127.0.0.1;Port=3306;Database=zinema_kudeaketa;User ID=root;Password=;Allow User Variables=True;");
-        }
-
-        return File.ReadAllText(connectionFile).Trim();
     }
 
     private void WriteLog(string message)
@@ -307,6 +227,4 @@ public sealed class ZinemaRepository
 
         return null;
     }
-
-    private static string EscapeIdentifier(string value) => value.Replace("`", "``");
 }

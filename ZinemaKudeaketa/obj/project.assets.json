@@ -200,19 +200,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Aitor\\.nuget\\packages\\": {}
+    "C:\\Users\\aitor\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\DESARROLLO GOIERRI\\recu datu atzipen\\ZinemaKudeaketa\\ZinemaKudeaketa\\ZinemaKudeaketa.csproj",
+      "projectUniqueName": "C:\\Users\\aitor\\Desktop\\Desarrollo\\DA_2Entrega_AitorAuzmendi\\ZinemaKudeaketa\\ZinemaKudeaketa.csproj",
       "projectName": "ZinemaKudeaketa",
-      "projectPath": "F:\\DESARROLLO GOIERRI\\recu datu atzipen\\ZinemaKudeaketa\\ZinemaKudeaketa\\ZinemaKudeaketa.csproj",
-      "packagesPath": "C:\\Users\\Aitor\\.nuget\\packages\\",
-      "outputPath": "F:\\DESARROLLO GOIERRI\\recu datu atzipen\\ZinemaKudeaketa\\ZinemaKudeaketa\\obj\\",
+      "projectPath": "C:\\Users\\aitor\\Desktop\\Desarrollo\\DA_2Entrega_AitorAuzmendi\\ZinemaKudeaketa\\ZinemaKudeaketa.csproj",
+      "packagesPath": "C:\\Users\\aitor\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\aitor\\Desktop\\Desarrollo\\DA_2Entrega_AitorAuzmendi\\ZinemaKudeaketa\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Aitor\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\aitor\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -268,7 +273,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
